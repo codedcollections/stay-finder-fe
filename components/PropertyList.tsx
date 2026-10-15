@@ -16,10 +16,12 @@ export default async function PropertyList({
   };
   const properties = await getProperties(propertiesFilter);
   return (
-    <div>
-      <T.Header size="lg">[PROPERTIES]</T.Header>
-      <PropertyFilter filter={propertiesFilter} />
-      <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-8">
+      <div className="flex flex-col gap-4">
+        <T.Header size="lg">Places to stay</T.Header>
+        <PropertyFilter filter={propertiesFilter} />
+      </div>
+      <div className="flex flex-col gap-3">
         {properties.map((property) => (
           <PropertyCard key={property.property_id} property={property} />
         ))}
