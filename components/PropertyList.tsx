@@ -10,9 +10,9 @@ type PropertyListProps = {
 export default async function PropertyList({
   searchParams,
 }: PropertyListProps) {
-  const location = (await searchParams).location?.toString() || "";
+  const city = (await searchParams).city?.toString() || "";
   const propertiesFilter: PropertiesFilter = {
-    location,
+    city,
   };
   const properties = await getProperties(propertiesFilter);
   return (

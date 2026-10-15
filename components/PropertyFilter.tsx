@@ -25,10 +25,10 @@ type PropertyFilterProps = {
 
 export default function PropertyFilter({ filter }: PropertyFilterProps) {
     const router = useRouter()
-  const [search, setSearch] = useState(filter.location || "");
+  const [search, setSearch] = useState(filter.city || "");
 
   const onFiltering = () => {
-    router.push(`/?location=${search}`)
+    router.push(`/?city=${search}`)
   }
 
   return (

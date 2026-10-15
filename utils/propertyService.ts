@@ -1,15 +1,15 @@
 import type { Property } from "@/types/property";
 
 export type PropertiesFilter = {
-    location?: string;
+    city?: string;
 }
 
 export async function getProperties({
-    location
+    city
 }: PropertiesFilter = {}): Promise<Property[]> {
     const url = new URL(`${process.env.NEXT_PUBLIC_BACKEND_URL}/properties/`)
-    if(location) {
-        url.searchParams.append("location", location)
+    if(city) {
+        url.searchParams.append("city", city)
     }
   try {
     const response = await fetch(url);
