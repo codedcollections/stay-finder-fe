@@ -1,7 +1,7 @@
 import type { Property, PropertyKind } from "@/types/property";
 
 export type PropertiesFilter = {
-  location?: string;
+  city?: string;
 };
 
 export type CreatePropertyState = {
@@ -16,11 +16,11 @@ function isPropertyKind(value: string): value is PropertyKind {
 }
 
 export async function getProperties({
-  location,
+  city,
 }: PropertiesFilter = {}): Promise<Property[]> {
   const url = new URL(`${process.env.NEXT_PUBLIC_BACKEND_URL}/properties/`);
-  if (location) {
-    url.searchParams.append("location", location);
+  if (city) {
+    url.searchParams.append("city", city);
   }
   try {
     const response = await fetch(url);
@@ -52,7 +52,8 @@ export async function createProperty(
 ): Promise<CreatePropertyState> {
   const title = String(formData.get("title") ?? "").trim();
   const description = String(formData.get("description") ?? "").trim();
-  const location = String(formData.get("location") ?? "").trim();
+  const city = String(formData.get("city") ?? "").trim();
+  const country = String(formData.get("country") ?? "").trim();
   const kind = String(formData.get("kind") ?? "");
   const maxGuests = Number(formData.get("max_guests"));
   const pricePerNight = Number(formData.get("price_per_night"));
@@ -71,7 +72,8 @@ export async function createProperty(
       body: JSON.stringify({
         title,
         description,
-        location,
+        city,
+        country,
         kind,
         max_guests: maxGuests,
         price_per_night: pricePerNight,

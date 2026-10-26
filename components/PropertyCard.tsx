@@ -22,7 +22,7 @@ export default function PropertyCard({
     >
       <T.Header size="md">{property.title}</T.Header>
       <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
-        {property.location}
+        {property.city}, {property.country}
       </p>
       <p className="mt-4 text-sm font-medium">
         {property.price_per_night} kr

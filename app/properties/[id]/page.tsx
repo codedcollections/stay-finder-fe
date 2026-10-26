@@ -23,7 +23,9 @@ export default async function PropertyPage({
       <div className="flex flex-col gap-2">
         <p className="text-sm capitalize text-zinc-500">{property.kind}</p>
         <T.Header size="lg">{property.title}</T.Header>
-        <p className="text-zinc-600 dark:text-zinc-400">{property.location}</p>
+        <p className="text-zinc-600 dark:text-zinc-400">
+          {property.city}, {property.country}
+        </p>
       </div>
       <p className="max-w-prose leading-relaxed">{property.description}</p>
       <dl className="grid grid-cols-2 gap-4 rounded-xl border border-zinc-200 p-5 text-sm dark:border-zinc-800">

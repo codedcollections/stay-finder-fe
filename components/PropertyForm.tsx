@@ -9,7 +9,8 @@ const fieldClassName =
 export type PropertyFormValues = {
   title?: string;
   description?: string;
-  location?: string;
+  city?: string;
+  country?: string;
   kind?: string;
   max_guests?: number;
   price_per_night?: number;
@@ -66,11 +67,20 @@ export default function PropertyForm({
         />
       </label>
       <label className="flex flex-col gap-1 text-sm">
-        Location
+        City
         <input
-          name="location"
+          name="city"
           required
-          defaultValue={values?.location}
+          defaultValue={values?.city}
+          className={fieldClassName}
+        />
+      </label>
+      <label className="flex flex-col gap-1 text-sm">
+        Country
+        <input
+          name="country"
+          required
+          defaultValue={values?.country}
           className={fieldClassName}
         />
       </label>
