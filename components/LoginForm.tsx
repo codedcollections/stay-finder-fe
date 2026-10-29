@@ -1,32 +1,42 @@
-"use client";
+"use client"
 
-import * as React from "react";
+import * as React from "react"
+import { useAuth } from "@/contexts/auth"
+import { useRouter } from "next/navigation"
 
-type Mode = "login" | "register";
+type Mode = "login" | "register"
 
 export default function LoginForm({ mode = "login" }: { mode?: Mode }) {
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
+  const auth = useAuth()
+  const router = useRouter()
+  const [error, setError] = React.useState<string>()
+  const [pending, setPending] = React.useState(false)
+  const [email, setEmail] = React.useState("")
+  const [password, setPassword] = React.useState("")
 
   //OBS! FormEvent if error
-  const handleSubmit = async (e: React.SubmitEvent) => {
-    e.preventDefault();
-    const url = `${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/${mode}`;
-    const response = await fetch(url, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      credentials: "include", // ← cookies följer med in/ut
-      body: JSON.stringify({ email, password }),
-    });
-
-    // Hantera gärna fel och lyckat svar i UI:t.
-    const data = await response.json();
-    console.log(data);
-  };
+  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    setError(undefined)
+    setPending(true)
+    try {
+      const response = await auth.login(email.trim(), password)
+      if (typeof response === "string") {
+        setError(response)
+        return
+      }
+      router.push("/")
+    } finally {
+      setPending(false)
+    }
+  }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4 max-w-sm">
-      <div className="flex flex-col">
+    <form
+      onSubmit={handleSubmit}
+      className="flex flex-1 items-end justify-center px-6 py-10 gap-3"
+    >
+      <div className="flex flex-col ">
         <label className="mb-1">Email</label>
         <input
           type="email"
@@ -50,9 +60,11 @@ export default function LoginForm({ mode = "login" }: { mode?: Mode }) {
         />
       </div>
 
-      <button className="rounded px-4 py-2 border" type="submit">
-        {mode === "login" ? "Logga in" : "Skapa konto"}
+      <button type="submit" disabled={pending}>
+        {pending ? "Logging in..." : "Log in"}
       </button>
+
+      {error && <p className="text-red-500">{error}</p>}
     </form>
-  );
+  )
 }

@@ -1,6 +1,7 @@
 import type { Property } from "@/types/property";
 import { cn } from "@/utils/cn";
 import Link from "next/link";
+import Image from 'next/image'
 import T from "./typography";
 
 type PropertyCardProps = {
@@ -21,6 +22,21 @@ export default function PropertyCard({
       )}
     >
       <T.Header size="md">{property.title}</T.Header>
+      {property.image_url ? (
+        <Image
+          src={property.image_url}
+          width={300}
+          height={200}
+          alt={`${property.title} property`}
+        />
+      ) : (
+        <div
+          className="flex h-50 w-74 items-center justify-center bg-zinc-100 text-sm text-zinc-500"
+          aria-label="No property image available"
+        >
+          No image available
+        </div>
+      )}
       <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
         {property.city}, {property.country}
       </p>

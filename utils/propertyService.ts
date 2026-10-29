@@ -15,6 +15,13 @@ function isPropertyKind(value: string): value is PropertyKind {
   return kinds.includes(value as PropertyKind);
 }
 
+type PropertiesResponse = {
+  data: Property[];
+  count: number;
+  offset: number;
+  limit: number;
+};
+
 export async function getProperties({
   city,
 }: PropertiesFilter = {}): Promise<Property[]> {
@@ -22,13 +29,14 @@ export async function getProperties({
   if (city) {
     url.searchParams.append("city", city);
   }
-  try {
-    const response = await fetch(url);
-    const properties: Property[] = await response.json();
-    return properties;
-  } catch (e) {
-    return [];
+
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(`Could not load properties (${response.status})`);
   }
+
+  const result: PropertiesResponse = await response.json();
+  return result.data;
 }
 
 export async function getPropertyById(id: string): Promise<Property | null> {
@@ -54,6 +62,7 @@ export async function createProperty(
   const description = String(formData.get("description") ?? "").trim();
   const city = String(formData.get("city") ?? "").trim();
   const country = String(formData.get("country") ?? "").trim();
+  const imageUrl = String(formData.get("image_url") ?? "").trim();
   const kind = String(formData.get("kind") ?? "");
   const maxGuests = Number(formData.get("max_guests"));
   const pricePerNight = Number(formData.get("price_per_night"));
@@ -74,6 +83,7 @@ export async function createProperty(
         description,
         city,
         country,
+        image_url: imageUrl || null,
         kind,
         max_guests: maxGuests,
         price_per_night: pricePerNight,

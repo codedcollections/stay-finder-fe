@@ -1,6 +1,7 @@
 import T from "@/components/typography";
 import { getPropertyById } from "@/utils/propertyService";
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 
 export default async function PropertyPage({
@@ -23,6 +24,21 @@ export default async function PropertyPage({
       <div className="flex flex-col gap-2">
         <p className="text-sm capitalize text-zinc-500">{property.kind}</p>
         <T.Header size="lg">{property.title}</T.Header>
+              {property.image_url ? (
+                <Image
+                  src={property.image_url}
+                  width={600}
+                  height={300}
+                  alt={`${property.title} property`}
+                />
+              ) : (
+                <div
+                  className="flex h-50 w-74 items-center justify-center bg-zinc-100 text-sm text-zinc-500"
+                  aria-label="No property image available"
+                >
+                  No image available
+                </div>
+              )}
         <p className="text-zinc-600 dark:text-zinc-400">
           {property.city}, {property.country}
         </p>

@@ -11,6 +11,7 @@ export type PropertyFormValues = {
   description?: string;
   city?: string;
   country?: string;
+  image_url?: string;
   kind?: string;
   max_guests?: number;
   price_per_night?: number;
@@ -81,6 +82,16 @@ export default function PropertyForm({
           name="country"
           required
           defaultValue={values?.country}
+          className={fieldClassName}
+        />
+      </label>
+      <label className="flex flex-col gap-1 text-sm">
+        Image URL
+        <input
+          name="image_url"
+          type="url"
+          placeholder="https://picsum.photos/300/200"
+          defaultValue={values?.image_url}
           className={fieldClassName}
         />
       </label>
