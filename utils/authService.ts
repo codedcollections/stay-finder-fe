@@ -19,6 +19,27 @@ export async function login(email: string, password: string) {
   return false;
 }
 
+export async function register(email: string, password: string) {
+  const url = new URL(`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/register/`);
+
+  const response = await fetch(url, {
+    method: "POST",
+    credentials: "include",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      email,
+      password,
+    }),
+  });
+
+  if (response.ok) {
+    return true;
+  }
+  return false;
+}
+
 export async function logout() {
   const url = new URL(`${process.env.NEXT_PUBLIC_BACKEND_URL}/auth/logout/`);
 

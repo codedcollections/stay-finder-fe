@@ -1,11 +1,12 @@
 import AuthForm from "@/components/AuthForm";
-import LoginForm from "@/components/LoginForm";
+import Link from "next/link";
 
 export default function LoginPage() {
   return (
     <div>
-      {/* <AuthForm /> */}
-      <LoginForm />
+      <h1>Logga in</h1>
+      <AuthForm />
+      <Link href={'/auth/register'} className="text-blue-600 hover:text-purple-600 transition-colors duration-200 underline">Registrera konto</Link>
     </div>
   );
 }

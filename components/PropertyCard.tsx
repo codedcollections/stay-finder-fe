@@ -27,7 +27,8 @@ export default function PropertyCard({
           src={property.image_url}
           width={300}
           height={200}
-          alt={`${property.title} property`}
+          alt={`${property.title}`}
+          loading="eager"
         />
       ) : (
         <div

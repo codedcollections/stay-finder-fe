@@ -1,42 +1,81 @@
-"use client";
+"use client"
 
-import { useState } from "react";
-import type {SubmitEvent} from "react"
-import T from "./typography";
-import { useAuth } from "@/contexts/auth";
-import { useRouter } from "next/navigation";
+import { useState } from "react"
+import { useAuth } from "@/contexts/auth"
+import { useRouter } from "next/navigation"
 
-export default function AuthForm() {
-    const auth = useAuth()
-    const router = useRouter()
-  const [error, setError] = useState<string>();
-  const [pending, setPending] = useState(false);
+type Mode = "login" | "register"
 
-  const login = async (event: SubmitEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const email = String(formData.get("email")).trim();
-    const password = String(formData.get("password"));
-    setError(undefined);
-    setPending(true);
-    const response = await auth.login(email, password)
-    setPending(false)
-    if(typeof response === "string") {
+export default function AuthForm({ mode = "login" }: { mode?: Mode }) {
+  const auth = useAuth()
+  const router = useRouter()
+  const [error, setError] = useState<string>()
+  const [pending, setPending] = useState(false)
+  const [email, setEmail] = useState("")
+  const [password, setPassword] = useState("")
+
+  //OBS! FormEvent if error
+  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    setError(undefined)
+    setPending(true)
+    try {
+      let response
+      if (mode === "login") {
+        response = await auth.login(email.trim(), password);
+      } else {
+        response = await auth.register(email.trim(), password);
+      }
+      if (typeof response === "string") {
         setError(response)
-        return;
+        return
+      }
+      router.push("/")
+    } finally {
+      setPending(false)
     }
-    router.push("/")
   }
 
   return (
-    <form onSubmit={login}>
-      <T.Header>Log in</T.Header>
-      <input name="email" type="email" placeholder="Enter email" required />
-      <input name="password" type="password" placeholder="Enter Password" required />
-      <button type="submit" disabled={pending}>Log in</button>
-      {error && (
-        <p className="text-red-500">{error}</p>
-      )}
+    <form
+      onSubmit={handleSubmit}
+      className="flex flex-1 items-end justify-center px-6 py-10 gap-3"
+    >
+      <div className="flex flex-col ">
+        <label className="mb-1">Email</label>
+        <input
+          type="email"
+          className="border rounded px-3 py-2"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+          autoComplete="email"
+        />
+      </div>
+
+      <div className="flex flex-col">
+        <label className="mb-1">Lösenord</label>
+        <input
+          type="password"
+          className="border rounded px-3 py-2"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+          autoComplete="current-password"
+        />
+      </div>
+      
+      <button type="submit" disabled={pending}>
+        {pending
+          ? mode === "login"
+            ? "Logging in..."
+            : "Registering..."
+          : mode === "login"
+            ? "Log in"
+            : "Register"}
+      </button>
+
+      {error && <p className="text-red-500">{error}</p>}
     </form>
-  );
+  )
 }

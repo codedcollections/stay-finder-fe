@@ -56,6 +56,12 @@ export default async function PropertyPage({
           <dd className="mt-1 text-lg font-semibold">{property.max_guests}</dd>
         </div>
       </dl>
+      <Link
+        href={`/bookings/${property.property_id}`}
+        className="rounded-lg bg-black px-6 py-3 text-center text-white hover:bg-zinc-800"
+      >
+        Book
+      </Link>
     </main>
   );
 }

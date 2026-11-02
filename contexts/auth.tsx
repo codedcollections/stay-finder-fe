@@ -1,18 +1,20 @@
 "use client"
 
-import { login, logout, getMe } from "@/utils/authService"
+import { login,register, logout, getMe } from "@/utils/authService"
 import { createContext, useState, useEffect, useContext } from "react"
 import type { PropsWithChildren } from "react"
 
 type AuthContextState = {
   user: AuthUser | null
   login: (email: string, password: string) => Promise<void | string>
+  register: (email: string, password: string) => Promise<void | string>
   logout: () => Promise<void | string>
 }
 
 const defaultState: AuthContextState = {
   user: null,
   login: () => Promise.resolve(),
+  register: ()=> Promise.resolve(),
   logout: () => Promise.resolve(),
 }
 
@@ -65,6 +67,28 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
     }
   }
 
+  const _register: typeof defaultState.register = async (email, password) => {
+  try {
+    const registered = await register(email, password)
+
+    if (!registered) {
+      throw new Error("Registration failed")
+    }
+
+    const currentUser = await getMe()
+
+    if (!currentUser) {
+      throw new Error("User could not be loaded")
+    }
+
+    setUser(currentUser)
+    return
+  } catch (e) {
+    console.warn("error in registering", e)
+    return "Registration failed"
+  }
+}
+
   const _logout: typeof defaultState.logout = async () => {
     try {
       const loggedOut = await logout()
@@ -84,6 +108,7 @@ const AuthProvider = ({ children }: PropsWithChildren) => {
       value={{
         user,
         login: _login,
+        register: _register,
         logout: _logout,
       }}
     >
