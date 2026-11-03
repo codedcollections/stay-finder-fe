@@ -12,7 +12,7 @@ export default async function BookingPage({
   const property = await getPropertyById(id)
 
   if (!property) {
-    notFound()
+    return notFound()
   }
 
   return (
