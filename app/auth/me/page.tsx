@@ -3,19 +3,20 @@
 
 import {
   PencilSquareIcon,
+  TrashIcon,
 } from "@heroicons/react/24/solid";
 
 import { useEffect, useState } from "react"
 import BookingCard from "@/components/BookingCard"
 import PropertyCard from "@/components/PropertyCard"
 import { getMyBookings } from "@/utils/bookingService"
-import { getMyProperties } from "@/utils/propertyService"
-import type { Booking } from "@/types/booking"
+import { deleteProperty, getMyProperties } from "@/utils/propertyService"
+import type { Booking, BookingWithProperty } from "@/types/booking"
 import type { Property } from "@/types/property"
 import Link from "next/link"
 
 export default function MyPage() {
-  const [bookings, setBookings] = useState<Booking[]>([])
+  const [bookings, setBookings] = useState<BookingWithProperty[]>([])
   const [properties, setProperties] = useState<Property[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -43,6 +44,21 @@ export default function MyPage() {
       })
       .finally(() => setPropertiesLoading(false))
   }, [])
+
+  const [deleteError, setDeleteError] = useState("")
+
+  const handleClick = async (property: Property) => {
+    const result = await deleteProperty(property.property_id)
+
+    if (result.error) {
+      setDeleteError(result.error)
+      return
+    }
+
+      setProperties((current) =>
+        current.filter((item) => item.property_id !== property.property_id),
+      )
+    }
 
   return (
     <main className="mx-auto max-w-4xl p-6">
@@ -109,15 +125,19 @@ export default function MyPage() {
           )}
 
           {!propertiesLoading && !propertiesError && properties.length > 0 && (
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div className="grid grid-cols-1 gap-7 sm:grid-cols-1">
               {properties.map((property) => (
                 <div key={property.property_id}>
                 <PropertyCard
                   property={property}
                 />
-                <Link className="flex align-middle gap-1 mt-2" href={`/host/properties/${property.property_id}/edit`}>
-                  <PencilSquareIcon className="h-6 w-6" />Edit Property
+                <div className="flex justify-between pb-3 mt-6 border-b border-gray-200">
+                  <Link className="flex align-middle gap-1" href={`/host/properties/${property.property_id}/edit`}>
+                  <PencilSquareIcon className="text-green-700 h-6 w-6" />Edit
                 </Link>
+                <button onClick={()=>{handleClick(property)}} className="flex align-middle gap-1 cursor-pointer hover:text-red-600 transition-colors">
+                  <TrashIcon className="text-red-700 h-6 w-6" />Delete</button></div>
+                  {deleteError !== "" && <p className="text-bold text-red-400">{deleteError}</p>}
                 </div>
               ))}
             </div>

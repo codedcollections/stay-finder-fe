@@ -1,17 +1,53 @@
 
-import type { Booking } from "@/types/booking"
+import { useState, useEffect } from "react"
+import type { BookingWithProperty } from "@/types/booking"
+import { deleteBooking } from "@/utils/bookingService"
 
 type BookingCardProps = {
-  booking: Booking
+  booking: BookingWithProperty
   index: number
 }
+
 
 export default function BookingCard({
   booking,
   index,
 }: BookingCardProps) {
+
+const [deleted, setDeleted] = useState(false)
+
+  const handleClick = async () => {
+    try {
+      await deleteBooking(booking.property_id, booking.booking_id)
+      setDeleted(true)
+    } catch (error) {
+      console.error("Failed to delete booking:", error)
+    }
+  }
+
+  if (deleted) return null
+
+
+  
   return (
     <div className="border rounded-xl p-5 shadow-sm">
+      <div className="mb-5">
+        {booking.properties?.image_url && (
+          <img
+            src={booking.properties.image_url}
+            alt={booking.properties.title}
+            className="w-full h-48 object-cover rounded-lg mb-3"
+          />
+        )}
+
+        <h2 className="text-xl font-semibold">
+          {booking.properties?.title ?? "Property unavailable"}
+        </h2>
+
+        <p className="text-sm text-gray-500">
+          {booking.properties?.city}, {booking.properties?.country}
+        </p>
+      </div>
       <h2 className="text-xl font-semibold mb-4">
         Booking #{index + 1}
       </h2>
@@ -64,10 +100,12 @@ export default function BookingCard({
         </div>
     </div>
 
-        <button className="w-full mt-5 p-3 bg-black hover:bg-red-500 text-white rounded-md transition-colors">
+      <button
+        onClick={handleClick}
+        className="w-full mt-5 p-3 bg-black hover:bg-red-500 text-white rounded-md transition-colors"
+      >
         Cancel booking
-        </button>
-
+      </button>
     </div>
   )
 }

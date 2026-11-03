@@ -13,11 +13,9 @@ export default async function EditPropertyPage({
   }
 
   return (
-    <main>
+    <main className="flex flex-1 items-start justify-center px-6 py-10 gap-3">
       <h1>Edit property</h1>
-
       <EditPropertyForm
-
         propertyId={id}
         values={{
           title: property.title,

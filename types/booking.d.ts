@@ -12,3 +12,14 @@ export type NewBooking = Omit<
 >;
 
 export type BookingValidKey = keyof Booking;
+
+export type BookingWithProperty = Booking & {
+  properties: {
+    title: string;
+    city: string;
+    country: string;
+    image_url: string | null;
+    kind: string;
+    price_per_night: number;
+  } | null;
+};

@@ -28,7 +28,8 @@ export default function EditPropertyForm({
   }
 
   return (
-    <PropertyForm
+    
+    <PropertyForm 
       action={handleUpdate}
       values={values}
       submitLabel="Save changes"
