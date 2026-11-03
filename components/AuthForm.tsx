@@ -30,7 +30,7 @@ export default function AuthForm({ mode = "login" }: { mode?: Mode }) {
         setError(response)
         return
       }
-      router.push("/")
+      router.push("/auth/me")
     } finally {
       setPending(false)
     }

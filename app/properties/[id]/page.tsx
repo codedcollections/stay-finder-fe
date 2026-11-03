@@ -10,7 +10,7 @@ export default async function PropertyPage({
   const { id } = await params;
   const property = await getPropertyById(id);
   if (!property) {
-    notFound();
+    return notFound();
   }
 
   return (

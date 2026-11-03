@@ -22,6 +22,22 @@ type PropertiesResponse = {
   limit: number;
 };
 
+export async function getMyProperties(): Promise<Property[]> {
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/properties/mine`,
+    {
+      method: "GET",
+      credentials: "include",
+    },
+  );
+
+  if (!response.ok) {
+    throw new Error(`Could not load properties (${response.status})`);
+  }
+
+  return response.json();
+}
+
 export async function getProperties({
   city,
 }: PropertiesFilter = {}): Promise<Property[]> {
@@ -103,4 +119,75 @@ export async function createProperty(
 
   const property: Property = await response.json();
   return { propertyId: property.property_id };
+}
+
+export async function updateProperty(
+  id: string,
+  formData: FormData,
+): Promise<CreatePropertyState> {
+  const title = String(formData.get("title") ?? "").trim();
+  const description = String(formData.get("description") ?? "").trim();
+  const city = String(formData.get("city") ?? "").trim();
+  const country = String(formData.get("country") ?? "").trim();
+  const imageUrl = String(formData.get("image_url") ?? "").trim();
+  const kind = String(formData.get("kind") ?? "");
+  const maxGuests = Number(formData.get("max_guests"));
+  const pricePerNight = Number(formData.get("price_per_night"));
+
+  if (!isPropertyKind(kind)) {
+    return { error: "Choose apartment or villa." };
+  }
+
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/properties/${id}`,
+    {
+      method: "PATCH",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        title,
+        description,
+        city,
+        country,
+        image_url: imageUrl || null,
+        kind,
+        max_guests: maxGuests,
+        price_per_night: pricePerNight,
+      }),
+    },
+  );
+
+  if (response.status === 401) {
+    return { error: "You need to be signed in to update a stay." };
+  }
+
+  if (!response.ok) {
+    return { error: "Could not update the stay." };
+  }
+
+  return { propertyId: id };
+}
+
+export async function deleteProperty(
+  id: string,
+): Promise<CreatePropertyState> {
+  const response = await fetch(
+    `${process.env.NEXT_PUBLIC_BACKEND_URL}/properties/${id}`,
+    {
+      method: "DELETE",
+      credentials: "include",
+    },
+  );
+
+  if (response.status === 401) {
+    return { error: "You need to be signed in to delete a property." };
+  }
+
+  if (!response.ok) {
+    return { error: "Could not delete the property." };
+  }
+
+  return { propertyId: id };
 }

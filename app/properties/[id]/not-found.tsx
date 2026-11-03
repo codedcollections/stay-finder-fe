@@ -1,9 +1,5 @@
 import Link from "next/link";
 import {
-  HomeIcon,
-  MagnifyingGlassIcon,
-  HeartIcon,
-  MapPinIcon,
   WrenchScrewdriverIcon,
 } from "@heroicons/react/24/solid";
 

@@ -1,4 +1,4 @@
-import type { Booking, NewBooking } from "@/types/booking";
+import type { Booking, NewBooking, BookingStatus } from "@/types/booking";
 
 export type CreateBookingState = {
     error?: string;
@@ -49,4 +49,35 @@ export async function createBooking(
 
     const createdBooking: Booking = await response.json();
     return { booking: createdBooking };
+}
+
+export async function updateBookingStatus(
+    bookingId: string,
+    status: BookingStatus,
+): Promise<CreateBookingState> {
+    const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/bookings/properties/:propertyId/:bookingId`,
+        {
+            method: "PATCH",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ status }),
+        },
+    );
+
+    if (response.status === 401) {
+        return { error: "You must be logged in to update a booking." };
+    }
+
+    if (!response.ok) {
+        return {
+            error: `Could not update the booking (${response.status}). Please try again.`,
+        };
+    }
+
+    const updatedBooking: Booking = await response.json();
+
+    return { booking: updatedBooking };
 }
