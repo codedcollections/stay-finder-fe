@@ -39,6 +39,9 @@ export default function PropertyFilter({
   const [guests, setGuests] = useState(
     filter.max_guests?.toString() || ""
   );
+  const [priceSort, setPriceSort] = useState(
+  filter.sort_by === "price_per_night" ? filter.sort_order ?? "asc" : ""
+  ); 
 
   const onFiltering = () => {
   setFilterError(null);
@@ -72,6 +75,10 @@ export default function PropertyFilter({
   if (search.trim()) params.set("city", search.trim());
   if (price !== undefined) params.set("max_price", String(price));
   if (guestCount !== undefined) params.set("max_guests", String(guestCount));
+  if (priceSort) {
+  params.set("sort_by", "price_per_night");
+  params.set("sort_order", priceSort);
+  }
 
   const query = params.toString();
   router.push(query ? `/?${query}` : "/");
@@ -105,6 +112,18 @@ export default function PropertyFilter({
         onChange={(e) => setGuests(e.target.value)}
         className="w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-sm outline-none focus:border-zinc-900 dark:border-zinc-700 dark:bg-zinc-950 dark:focus:border-zinc-300"
       />
+
+      <select
+        value={priceSort}
+        onChange={(event) =>
+        setPriceSort(event.target.value as "" | "asc" | "desc")
+        }
+        aria-label="Sort by price"
+        >
+        <option value="">Default order</option>
+        <option value="asc">Price: low to high</option>
+        <option value="desc">Price: high to low</option>
+      </select>
 
       <button
         type="button"

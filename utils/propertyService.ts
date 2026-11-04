@@ -5,6 +5,8 @@ export type PropertiesFilter = {
   min_price?: number;
   max_price?: number;
   max_guests?: number;
+  sort_by?: "title" | "city" | "price_per_night" | "created_at";
+  sort_order?: "asc" | "desc";
 };
 
 export type CreatePropertyState = {
@@ -45,7 +47,9 @@ export async function getProperties({
   city,
   min_price,
   max_price,
-  max_guests
+  max_guests,
+  sort_by,
+  sort_order,
 }: PropertiesFilter = {}): Promise<Property[]> {
   const url = new URL(`${process.env.NEXT_PUBLIC_BACKEND_URL}/properties/`);
   if (city?.trim()) {
@@ -63,6 +67,9 @@ export async function getProperties({
   if (max_guests !== undefined) {
     url.searchParams.set("max_guests", max_guests.toString());
   }
+
+  if (sort_by) url.searchParams.set("sort_by", sort_by);
+  if (sort_order) url.searchParams.set("sort_order", sort_order);
 
   const response = await fetch(url);
   if (!response.ok) {

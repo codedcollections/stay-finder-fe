@@ -23,11 +23,18 @@ export default async function PropertyList({
     ? Number(params.max_guests)
     : undefined;
 
+  const sortBy = params.sort_by?.toString();
+  const sortOrder = params.sort_order?.toString();
+
   const propertiesFilter: PropertiesFilter = {
     city,
     max_price: maxPrice,
     max_guests: maxGuests,
-  };
+    sort_by:
+      sortBy === "price_per_night" ? "price_per_night" : undefined,
+    sort_order:
+      sortOrder === "asc" || sortOrder === "desc" ? sortOrder : undefined,
+    };
 
   let properties: Property[] = [];
   let loadError: string | null = null;

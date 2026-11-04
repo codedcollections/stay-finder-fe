@@ -2,6 +2,8 @@
 import { useState, useEffect } from "react"
 import type { BookingWithProperty } from "@/types/booking"
 import { deleteBooking } from "@/utils/bookingService"
+import { PencilSquareIcon } from "@heroicons/react/16/solid"
+import Link from "next/link"
 
 type BookingCardProps = {
   booking: BookingWithProperty
@@ -96,10 +98,29 @@ const [deleted, setDeleted] = useState(false)
             <p className="font-medium">{booking.guest_email}</p>
         </div>
     </div>
-
+      <Link
+       className={`w-full mt-5 p-3 text-white rounded-md transition-colors
+      flex items-center justify-center gap-2
+      ${
+        booking.status !== "pending"
+          ? "bg-gray-300 cursor-not-allowed pointer-events-none"
+          : "bg-black hover:bg-green-700"
+      }`}
+        href={`/host/bookings/${booking.booking_id}/edit`}
+        aria-disabled={booking.status !== "pending"}
+        tabIndex={booking.status !== "pending" ? -1 : 0}
+        onClick={(event) => {
+          if (booking.status !== "pending") {
+            event.preventDefault()
+          }
+        }}
+      >
+        <PencilSquareIcon className="h-6 w-6" />
+        Edit
+      </Link>
       <button
         onClick={handleClick}
-        disabled={booking.status === "cancelled"}
+        disabled={booking.status !== "pending"}
         className="w-full mt-5 p-3 bg-black hover:bg-red-500
     disabled:bg-gray-300 disabled:hover:bg-gray-300
     disabled:cursor-not-allowed text-white rounded-md transition-colors"

@@ -1,6 +1,6 @@
 "use client";
 
-import { SubmitEvent, useState, type FormEvent } from "react";
+import { SubmitEvent, useState } from "react";
 import type { CreatePropertyState } from "@/utils/propertyService";
 
 const fieldClassName =
