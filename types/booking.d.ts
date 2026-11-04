@@ -23,3 +23,21 @@ export type BookingWithProperty = Booking & {
     price_per_night: number;
   } | null;
 };
+
+export type BookingRequest = Pick<
+  Booking,
+  | "booking_id"
+  | "property_id"
+  | "guest_name"
+  | "guest_email"
+  | "check_in"
+  | "check_out"
+  | "guests"
+  | "status"
+  | "created_at"
+> & {
+  properties: {
+    property_id: string;
+    title: string;
+  };
+};

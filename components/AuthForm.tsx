@@ -14,7 +14,6 @@ export default function AuthForm({ mode = "login" }: { mode?: Mode }) {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
 
-  //OBS! FormEvent if error
   const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault()
     setError(undefined)

@@ -1,4 +1,4 @@
-import type { Booking, BookingWithProperty, NewBooking, BookingStatus } from "@/types/booking";
+import type { Booking, BookingWithProperty, NewBooking, BookingStatus, BookingRequest } from "@/types/booking";
 
 export type CreateBookingState = {
     error?: string;
@@ -16,6 +16,22 @@ export async function getMyBookings(): Promise<BookingWithProperty[]> {
 
     if (!response.ok) {
         throw new Error(`Could not load bookings (${response.status})`);
+    }
+
+    return response.json();
+}
+
+export async function getMyBookingRequests(): Promise<BookingRequest[]> {
+    const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/bookings/requests`,
+        {
+            method: "GET",
+            credentials: "include",
+        },
+    );
+
+    if (!response.ok) {
+        throw new Error(`Could not load booking requests (${response.status})`);
     }
 
     return response.json();
@@ -53,10 +69,11 @@ export async function createBooking(
 
 export async function updateBookingStatus(
     bookingId: string,
+    propertyId: string,
     status: BookingStatus,
 ): Promise<CreateBookingState> {
     const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BACKEND_URL}/bookings/properties/:propertyId/:bookingId`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/bookings/properties/${propertyId}/${bookingId}`,
         {
             method: "PATCH",
             credentials: "include",

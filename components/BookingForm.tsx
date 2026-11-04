@@ -61,7 +61,6 @@ export default function BookingForm({
 
     setError(undefined)
 
-    // Basic date validation
     if (new Date(checkOut) <= new Date(checkIn)) {
       setError("Check-out must be after check-in.")
       return
@@ -90,7 +89,7 @@ export default function BookingForm({
         return
       }
 
-      router.push(`/auth/me`)
+      router.push(`/auth/me/bookings`)
     } catch {
       setError("Something went wrong. Please try again.")
     } finally {

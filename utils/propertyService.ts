@@ -2,6 +2,9 @@ import type { Property, PropertyKind } from "@/types/property";
 
 export type PropertiesFilter = {
   city?: string;
+  min_price?: number;
+  max_price?: number;
+  max_guests?: number;
 };
 
 export type CreatePropertyState = {
@@ -40,10 +43,25 @@ export async function getMyProperties(): Promise<Property[]> {
 
 export async function getProperties({
   city,
+  min_price,
+  max_price,
+  max_guests
 }: PropertiesFilter = {}): Promise<Property[]> {
   const url = new URL(`${process.env.NEXT_PUBLIC_BACKEND_URL}/properties/`);
-  if (city) {
-    url.searchParams.append("city", city);
+  if (city?.trim()) {
+    url.searchParams.set("city", city.trim());
+  }
+
+  if (max_price !== undefined) {
+    url.searchParams.set("max_price", max_price.toString());
+  }
+
+  if (min_price !== undefined) {
+    url.searchParams.set("min_price", min_price.toString());
+  }
+
+  if (max_guests !== undefined) {
+    url.searchParams.set("max_guests", max_guests.toString());
   }
 
   const response = await fetch(url);

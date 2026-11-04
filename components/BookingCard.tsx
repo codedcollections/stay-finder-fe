@@ -48,10 +48,7 @@ const [deleted, setDeleted] = useState(false)
           {booking.properties?.city}, {booking.properties?.country}
         </p>
       </div>
-      <h2 className="text-xl font-semibold mb-4">
-        Booking #{index + 1}
-      </h2>
-
+    
       <p className="mb-4">
         <span className="text-sm text-gray-500">Status: </span>
         <span
@@ -102,7 +99,10 @@ const [deleted, setDeleted] = useState(false)
 
       <button
         onClick={handleClick}
-        className="w-full mt-5 p-3 bg-black hover:bg-red-500 text-white rounded-md transition-colors"
+        disabled={booking.status === "cancelled"}
+        className="w-full mt-5 p-3 bg-black hover:bg-red-500
+    disabled:bg-gray-300 disabled:hover:bg-gray-300
+    disabled:cursor-not-allowed text-white rounded-md transition-colors"
       >
         Cancel booking
       </button>
